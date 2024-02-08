@@ -763,6 +763,7 @@ class String:
         last_nl = stream.rfind("\n", 0, index)
         col = index - (last_nl + 1)
         return (line, col)
+
 String.line_info = Parser(lambda stream, index: Result.success(index, String.line_info_at(stream, index)))
 
 String.any_char = String.test_char(lambda c: True, "any character")
@@ -774,56 +775,3 @@ String.letter = String.test_char(lambda c: c.isalpha(), "a letter")
 String.digit = String.test_char(lambda c: c.isdigit(), "a digit")
 
 String.decimal_digit = String.char_from("0123456789")
-
-
-
-
-
-class ForwardParser:
-
-    def __init__(self, parser: typing.Optional[Parser]) -> None:
-        self.parser = parser
-
-    def set_parser(self, parser: Parser) -> None:
-        self.parser = parser
-
-    def parse(self, stream: StreamType) -> typing.Any:
-        return self.parser.parse(stream)
-
-    def parse_partial(self, stream: StreamType) -> typing.Tuple[typing.Any, StreamType]:
-        return self.parser.parse_partial(stream)
-
-def ParserGet(name: str) -> ForwardParser:
-    fp = Parser.forward_parser.get(name)
-    if fp is None:
-        fp = ForwardParser()
-    
-    Parser.forward_parser[name] = fp
-    return fp
-
-Parser.get = ParserGet
-
-# #######################################################################################################
-# class forward_declaration(Parser):
-#     """
-#     An empty parser that can be used as a forward declaration,
-#     especially for parsers that need to be defined recursively.
-
-#     You must use `.become(parser)` before using.
-#     """
-
-#     def __init__(self):
-#         pass
-
-#     def _raise_error(self, *args, **kwargs):
-#         raise ValueError("You must use 'become' before attempting to call `parse` or `parse_partial`")
-
-#     parse = _raise_error
-#     parse_partial = _raise_error
-
-#     def become(self, other: Parser):
-#         """
-#         Take on the behavior of the given parser.
-#         """
-#         self.__dict__ = other.__dict__
-#         self.__class__ = other.__class__

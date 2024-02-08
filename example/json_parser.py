@@ -72,7 +72,7 @@ if __name__ == '__main__':
                 '"int": 1,\n',
                 '"string": "hello",//this is a comment\n\n',
                 '//this is another comment\n',
-                '"a list": [1, 2, 3],\n',
+                '"a list": [1, 2, 3, ["abc", 7]],\n',
                 '"escapes": "\n \u24D2 中文",\n',
                 '"nested": {"x": "y"},\n',
                 '"other": [true, false, null],\n',
@@ -81,31 +81,31 @@ if __name__ == '__main__':
         )   
         json_doc = JsonParser.get_parser()
         # print(json_str);exit()
+        r = json_doc.parse(json_str)
+        print(r)
         assert (
-            json_doc.parse(
-                json_str
-            )
+            r
             == {
                 "int": 1,
                 "string": "hello",
-                "a list": [1, 2, 3],
+                "a list": [1, 2, 3, ['abc', 7]],
                 "escapes": "\n ⓒ 中文",
                 "nested": {"x": "y"},
                 "other": [True, False, None],
             }
         )
-        r = json_doc.parse(
-                r"""
-        {
-            "int": 1,
-            "string": "hello",
-            "a list": [1, 2, 3],
-            "escapes": "\n \u24D2 中文",
-            "nested": {"x": "y"},
-            "other": [true, false, null]
-        }
-        """
-        )
-        print(r)
+        # r = json_doc.parse(
+        #         r"""
+        # {
+        #     "int": 1,
+        #     "string": "hello",
+        #     "a list": [1, 2, 3],
+        #     "escapes": "\n \u24D2 中文",
+        #     "nested": {"x": "y"},
+        #     "other": [true, false, null]
+        # }
+        # """
+        # )
+        # print(r)
 
     test()
