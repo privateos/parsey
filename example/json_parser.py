@@ -2,6 +2,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.split(__file__)[0], '..')))
 
+import typing
 from parsey import Parser, String
 class JsonParser:
     json_parser = None
@@ -63,6 +64,15 @@ class JsonParser:
         JsonParser.json_parser = json_doc
         return JsonParser.json_parser
 
+    def parse_from_string(json_string: str) -> typing.Any:
+        json_parser = JsonParser.get_parser()
+        return json_parser.parse(json_string)
+    
+    @staticmethod
+    def parse_from_file(file: str) -> typing.Any:
+        with open(file, 'r') as input_stream:
+            json_string = input_stream.read()
+        return JsonParser.parse_from_string(json_string=json_string)
 
 if __name__ == '__main__':
     def test():
@@ -79,9 +89,7 @@ if __name__ == '__main__':
                 '}//comment2122'
             )
         )   
-        json_doc = JsonParser.get_parser()
-        # print(json_str);exit()
-        r = json_doc.parse(json_str)
+        r = JsonParser.parse_from_string(json_str)
         print(r)
         assert (
             r
